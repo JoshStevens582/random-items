@@ -6,8 +6,6 @@ Full-stack demo for managing a collection of short strings with CRUD and a shuff
 
 ![App screenshot](docs/screenshot.png)
 
-> After you run the app locally, capture a screenshot of the UI and save it as `docs/screenshot.png` so this image appears on GitHub.
-
 ## Features
 
 - Create, list, update, and delete string items
