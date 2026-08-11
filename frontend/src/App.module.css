@@ -1,0 +1,8 @@
+.app {
+  min-height: 100vh;
+}
+
+.manage {
+  padding-top: var(--space-xl);
+  background: var(--color-canvas);
+}

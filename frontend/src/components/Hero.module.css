@@ -1,0 +1,95 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.heroAtmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 20%, rgba(13, 122, 111, 0.22), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 75%, rgba(26, 31, 28, 0.1), transparent 50%),
+    linear-gradient(165deg, #eef1ec 0%, #dfe5dc 45%, #c9d4ce 100%);
+}
+
+.heroAtmosphere::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-image:
+    linear-gradient(rgba(26, 31, 28, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 31, 28, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, black, transparent);
+}
+
+.heroInner {
+  width: min(100%, var(--max-width));
+  text-align: left;
+}
+
+.brand {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  color: var(--color-ink);
+}
+
+.tagline {
+  margin: 0 0 var(--space-lg);
+  max-width: 22rem;
+  font-size: 1.15rem;
+  color: var(--color-ink-muted);
+}
+
+.shuffleButton {
+  appearance: none;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.9rem 1.75rem;
+  background: var(--color-accent);
+  color: #f5f8f6;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow-soft);
+  transition:
+    background 180ms var(--ease-out),
+    transform 180ms var(--ease-out),
+    box-shadow 180ms var(--ease-out);
+}
+
+.shuffleButton:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.shuffleButton:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 8px 18px rgba(26, 31, 28, 0.1);
+}
+
+.heroError {
+  margin: var(--space-md) 0 0;
+  color: var(--color-danger);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    align-items: flex-end;
+    padding-bottom: 18vh;
+  }
+}
