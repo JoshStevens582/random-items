@@ -49,6 +49,15 @@ npm run dev
 
 Interactive API docs: `http://127.0.0.1:8000/docs`
 
+## Tests
+
+```bash
+uv sync --group dev
+uv run pytest
+```
+
+GitHub Actions runs backend tests and a frontend production build on every push and pull request to `master`.
+
 ## API endpoints
 
 | Method | Path            | Description                          |
