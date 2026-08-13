@@ -1,53 +1,72 @@
 # Random Items
 
-Full-stack demo for managing a collection of short strings with CRUD and a shuffle endpoint. Built as a portfolio piece: FastAPI + SQLite on the backend, React + Vite on the frontend.
+Save short strings, then shuffle them into a random order.
 
-**Stack:** Python 3.12 · FastAPI · SQLAlchemy · SQLite · React · TypeScript · Vite
+**Backend:** Python 3.12 · FastAPI · SQLAlchemy · SQLite  
+**Frontend:** React · TypeScript · Vite
 
 ![App screenshot](docs/screenshot.png)
 
-## Features
+## What it does
 
-- Create, list, update, and delete string items
-- Shuffle the collection into a randomized order
-- Portfolio-oriented UI with a shuffle-first hero and manage section below
+- Add, edit, and delete items
+- Shuffle the collection into a random order
+- REST API with docs at `/docs`
 
-## Requirements
+The website (React) talks to the API (FastAPI). Locally those are two programs: the API on port 8000, the website on port 5173.
+
+## Run locally
+
+You do **not** need a `.env` file on your machine. Defaults already match this setup.
+
+### Requirements
 
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/)
-- Node.js 20+ (for the frontend)
+- Node.js 20+
 
-## Setup
+### Install
 
 ```bash
-# API
 uv sync
 
-# Frontend
 cd frontend
 npm install
 cd ..
 ```
 
-Copy `frontend/.env.example` to `frontend/.env` if you need to override the API base URL (defaults to `http://127.0.0.1:8000`).
+### Start (two terminals)
 
-## Run
-
-Start the API and UI in two terminals:
+**Terminal 1 — API** at http://127.0.0.1:8000
 
 ```bash
-# Terminal 1 — API (http://127.0.0.1:8000)
 uv run random-items
 ```
 
+**Terminal 2 — website** at http://127.0.0.1:5173
+
 ```bash
-# Terminal 2 — UI (http://127.0.0.1:5173)
 cd frontend
 npm run dev
 ```
 
-Interactive API docs: `http://127.0.0.1:8000/docs`
+Open http://127.0.0.1:5173 in your browser.
+
+Interactive API docs: http://127.0.0.1:8000/docs
+
+## Configuration (optional)
+
+The API can run on another machine without editing Python. Copy `.env.example` to `.env` and set values for **that** machine.
+
+| Variable | Local default | What it is |
+|----------|-----------------|------------|
+| `DATABASE_URL` | SQLite file `items.db` in this repo | Where items are stored |
+| `CORS_ORIGINS` | `http://127.0.0.1:5173`, `http://localhost:5173` | Which website may call the API |
+| `HOST` / `PORT` | `127.0.0.1:8000` | Where the API listens |
+| `ENV` | `development` | Use `production` to turn reload off |
+| `APP_TITLE` | `Random Items API` | API title in `/docs` |
+
+If the website should call an API that is not `http://127.0.0.1:8000`, copy `frontend/.env.example` to `frontend/.env` and set `VITE_API_BASE_URL`.
 
 ## Tests
 
@@ -58,7 +77,7 @@ uv run pytest
 
 GitHub Actions runs backend tests and a frontend production build on every push and pull request to `master`.
 
-## API endpoints
+## API
 
 | Method | Path            | Description                          |
 |--------|-----------------|--------------------------------------|
@@ -70,17 +89,16 @@ GitHub Actions runs backend tests and a frontend production build on every push 
 | DELETE | `/items/{id}`   | Delete an item                       |
 | GET    | `/health`       | Health check                         |
 
-## Project layout
-
-```
-src/random_items/   # FastAPI app, models, services
-frontend/           # React + Vite SPA
-docs/               # Screenshot for README
-```
-
-## Example (API only)
-
 ```bash
 curl -X POST http://127.0.0.1:8000/items -H "Content-Type: application/json" -d "{\"content\": \"apple\"}"
 curl http://127.0.0.1:8000/items/random
+```
+
+## Project layout
+
+```
+src/random_items/   FastAPI app
+frontend/           React website
+tests/              API tests
+.env.example        API settings you can override on another machine
 ```

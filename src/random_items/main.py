@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from random_items.config import APP_TITLE
+from random_items.config import settings
 from random_items.database import Base, engine
 from random_items.db_models.item import Item  # noqa: F401
 from random_items.routers.items import router as items_router
@@ -17,13 +17,10 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     yield
 
 
-app = FastAPI(title=APP_TITLE, lifespan=lifespan)
+app = FastAPI(title=settings.app_title, lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5173",
-        "http://localhost:5173",
-    ],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,7 +36,7 @@ def health() -> dict[str, str]:
 def run() -> None:
     uvicorn.run(
         "random_items.main:app",
-        host="127.0.0.1",
-        port=8000,
-        reload=True,
+        host=settings.host,
+        port=settings.port,
+        reload=settings.reload,
     )
