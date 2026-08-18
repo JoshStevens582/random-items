@@ -2,7 +2,7 @@
 
 Save short strings, then shuffle them into a random order.
 
-**Backend:** Python 3.12 · FastAPI · SQLAlchemy · SQLite  
+**Backend:** Python 3.12 · FastAPI · SQLAlchemy · Alembic · SQLite  
 **Frontend:** React · TypeScript · Vite
 
 ![App screenshot](docs/screenshot.png)
@@ -40,7 +40,14 @@ cd ..
 **Terminal 1 — API** at http://127.0.0.1:8000
 
 ```bash
+uv run alembic upgrade head
 uv run random-items
+```
+
+If `items.db` already exists from before Alembic (the old `create_all` path), stamp it instead of running the first migration:
+
+```bash
+uv run alembic stamp head
 ```
 
 **Terminal 2 — website** at http://127.0.0.1:5173
@@ -98,6 +105,7 @@ curl http://127.0.0.1:8000/items/random
 
 ```
 src/random_items/   FastAPI app
+alembic/            Database migrations
 frontend/           React website
 tests/              API tests
 .env.example        API settings you can override on another machine
