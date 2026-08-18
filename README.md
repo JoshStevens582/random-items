@@ -15,6 +15,38 @@ Save short strings, then shuffle them into a random order.
 
 The website (React) talks to the API (FastAPI). Locally those are two programs: the API on port 8000, the website on port 5173.
 
+## Evolution
+
+This project is being built in stages — from a simple random-items demo toward a personal task manager. Each step is intentionally small and reviewable.
+
+### Foundation (on `master`)
+
+| Stage | What changed | Link |
+|-------|--------------|------|
+| 1 | Initial MVP — FastAPI CRUD API + React frontend | [commit](https://github.com/JoshStevens582/random-items/commit/0152865) |
+| 2 | Portfolio screenshot and README | [commit](https://github.com/JoshStevens582/random-items/commit/27af5dd) |
+| 3 | Backend tests and GitHub Actions CI | [commit](https://github.com/JoshStevens582/random-items/commit/5738572) |
+| 4 | Frontend lockfile sync and CI on Node 22 | [commit](https://github.com/JoshStevens582/random-items/commit/91a2155) |
+| 5 | Environment-based API config for portable deployment | [commit](https://github.com/JoshStevens582/random-items/commit/4be0250) |
+
+### In progress
+
+| Stage | What changed | Link |
+|-------|--------------|------|
+| 6 | Alembic migrations — versioned schema changes without data loss | [PR #1](https://github.com/JoshStevens582/random-items/pull/1) |
+
+### Planned (task manager)
+
+| Stage | What changed |
+|-------|--------------|
+| 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) |
+| 8 | Task status workflow (`todo`, `in_progress`, `done`) |
+| 9 | Priority and due dates |
+| 10 | Task dashboard UI (filters, badges, replace shuffle flow) |
+| 11 | Notes, `updated_at`, and polish |
+
+From stage 7 onward, each step will be its own branch → PR → merge.
+
 ## Run locally
 
 You do **not** need a `.env` file on your machine. Defaults already match this setup.
