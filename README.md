@@ -29,11 +29,6 @@ This project is being built in stages — from a simple random-items demo toward
 | 4 | Frontend lockfile sync and CI on Node 22 | [commit](https://github.com/JoshStevens582/random-items/commit/91a2155) |
 | 5 | Environment-based API config for portable deployment | [commit](https://github.com/JoshStevens582/random-items/commit/4be0250) |
 | 6 | Alembic migrations — versioned schema changes without data loss | [PR #1](https://github.com/JoshStevens582/random-items/pull/1) |
-
-### In progress
-
-| Stage | What changed | Link |
-|-------|--------------|------|
 | 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) | [PR #2](https://github.com/JoshStevens582/random-items/pull/2) |
 
 ### Planned (task manager)
@@ -45,7 +40,7 @@ This project is being built in stages — from a simple random-items demo toward
 | 10 | Task dashboard UI (filters, badges, replace shuffle flow) |
 | 11 | Notes, `updated_at`, and polish |
 
-From stage 7 onward, each step will be its own branch → PR → merge.
+From stage 8 onward, each step will be its own branch → PR → merge.
 
 ## Run locally
 
