@@ -34,7 +34,7 @@ This project is being built in stages — from a simple random-items demo toward
 
 | Stage | What changed | Link |
 |-------|--------------|------|
-| 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) | [branch](https://github.com/JoshStevens582/random-items/tree/feat/item-to-task) |
+| 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) | [PR #2](https://github.com/JoshStevens582/random-items/pull/2) |
 
 ### Planned (task manager)
 
