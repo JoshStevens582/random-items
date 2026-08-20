@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
 import {
   ApiError,
-  createItem,
-  deleteItem,
-  getRandomItems,
-  listItems,
-  updateItem,
+  createTask,
+  deleteTask,
+  getRandomTasks,
+  listTasks,
+  updateTask,
 } from './api/client'
-import { AddItemForm } from './components/AddItemForm'
+import { AddTaskForm } from './components/AddTaskForm'
 import { Hero } from './components/Hero'
-import { ItemList } from './components/ItemList'
 import { RandomResults } from './components/RandomResults'
-import type { Item } from './types'
+import { TaskList } from './components/TaskList'
+import type { Task } from './types'
 import styles from './App.module.css'
 
 function messageFromError(error: unknown): string {
@@ -25,7 +25,7 @@ function messageFromError(error: unknown): string {
 }
 
 export default function App() {
-  const [items, setItems] = useState<Item[]>([])
+  const [tasks, setTasks] = useState<Task[]>([])
   const [listLoading, setListLoading] = useState(true)
   const [listError, setListError] = useState<string | null>(null)
   const [createBusy, setCreateBusy] = useState(false)
@@ -33,16 +33,16 @@ export default function App() {
   const [rowBusyId, setRowBusyId] = useState<number | null>(null)
   const [shuffleBusy, setShuffleBusy] = useState(false)
   const [shuffleError, setShuffleError] = useState<string | null>(null)
-  const [randomItems, setRandomItems] = useState<string[]>([])
+  const [randomTasks, setRandomTasks] = useState<string[]>([])
   const [showRandom, setShowRandom] = useState(false)
   const [shuffleKey, setShuffleKey] = useState(0)
 
-  const refreshItems = useCallback(async () => {
+  const refreshTasks = useCallback(async () => {
     setListLoading(true)
     setListError(null)
     try {
-      const response = await listItems()
-      setItems(response.items)
+      const response = await listTasks()
+      setTasks(response.tasks)
     } catch (error) {
       setListError(messageFromError(error))
     } finally {
@@ -51,15 +51,15 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    void refreshItems()
-  }, [refreshItems])
+    void refreshTasks()
+  }, [refreshTasks])
 
   async function handleShuffle() {
     setShuffleBusy(true)
     setShuffleError(null)
     try {
-      const response = await getRandomItems()
-      setRandomItems(response.items)
+      const response = await getRandomTasks()
+      setRandomTasks(response.tasks)
       setShowRandom(true)
       setShuffleKey((value) => value + 1)
     } catch (error) {
@@ -69,12 +69,12 @@ export default function App() {
     }
   }
 
-  async function handleCreate(content: string) {
+  async function handleCreate(title: string) {
     setCreateBusy(true)
     setCreateError(null)
     try {
-      const created = await createItem({ content })
-      setItems((current) => [...current, created])
+      const created = await createTask({ title })
+      setTasks((current) => [...current, created])
     } catch (error) {
       setCreateError(messageFromError(error))
       throw error
@@ -83,13 +83,13 @@ export default function App() {
     }
   }
 
-  async function handleUpdate(id: number, content: string) {
+  async function handleUpdate(id: number, title: string) {
     setRowBusyId(id)
     setListError(null)
     try {
-      const updated = await updateItem(id, { content })
-      setItems((current) =>
-        current.map((item) => (item.id === id ? updated : item)),
+      const updated = await updateTask(id, { title })
+      setTasks((current) =>
+        current.map((task) => (task.id === id ? updated : task)),
       )
     } catch (error) {
       setListError(messageFromError(error))
@@ -103,8 +103,8 @@ export default function App() {
     setRowBusyId(id)
     setListError(null)
     try {
-      await deleteItem(id)
-      setItems((current) => current.filter((item) => item.id !== id))
+      await deleteTask(id)
+      setTasks((current) => current.filter((task) => task.id !== id))
     } catch (error) {
       setListError(messageFromError(error))
     } finally {
@@ -121,17 +121,17 @@ export default function App() {
       />
       <RandomResults
         key={shuffleKey}
-        items={randomItems}
+        tasks={randomTasks}
         visible={showRandom}
       />
       <main className={styles.manage}>
-        <AddItemForm
+        <AddTaskForm
           onSubmit={handleCreate}
           busy={createBusy}
           error={createError}
         />
-        <ItemList
-          items={items}
+        <TaskList
+          tasks={tasks}
           loading={listLoading}
           error={listError}
           busyId={rowBusyId}

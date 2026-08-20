@@ -1,1 +1,1 @@
-"""Random Items API package."""
+"""Random Tasks API package."""

@@ -1,23 +1,23 @@
-export interface Item {
+export interface Task {
   id: number
-  content: string
+  title: string
   created_at: string
 }
 
-export interface ItemListResponse {
-  items: Item[]
+export interface TaskListResponse {
+  tasks: Task[]
   count: number
 }
 
-export interface RandomItemsResponse {
-  items: string[]
+export interface RandomTasksResponse {
+  tasks: string[]
   count: number
 }
 
-export interface ItemCreate {
-  content: string
+export interface TaskCreate {
+  title: string
 }
 
-export interface ItemUpdate {
-  content?: string
+export interface TaskUpdate {
+  title?: string
 }

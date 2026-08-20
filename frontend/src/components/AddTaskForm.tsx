@@ -1,25 +1,25 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import styles from './AddItemForm.module.css'
+import styles from './AddTaskForm.module.css'
 
-interface AddItemFormProps {
-  onSubmit: (content: string) => Promise<void>
+interface AddTaskFormProps {
+  onSubmit: (title: string) => Promise<void>
   busy: boolean
   error: string | null
 }
 
-export function AddItemForm({ onSubmit, busy, error }: AddItemFormProps) {
-  const [content, setContent] = useState('')
+export function AddTaskForm({ onSubmit, busy, error }: AddTaskFormProps) {
+  const [title, setTitle] = useState('')
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const trimmed = content.trim()
+    const trimmed = title.trim()
     if (!trimmed) {
       return
     }
     try {
       await onSubmit(trimmed)
-      setContent('')
+      setTitle('')
     } catch {
       // Error is surfaced by the parent via the error prop.
     }
@@ -28,27 +28,27 @@ export function AddItemForm({ onSubmit, busy, error }: AddItemFormProps) {
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
-        <h2 className={styles.title}>Add an item</h2>
+        <h2 className={styles.title}>Add a task</h2>
         <p className={styles.subtitle}>
-          Store a string in your collection.
+          Store a title in your collection.
         </p>
         <form className={styles.form} onSubmit={handleSubmit}>
           <input
             className={styles.input}
             type="text"
-            name="content"
-            value={content}
-            onChange={(event) => setContent(event.target.value)}
-            placeholder="e.g. cold brew"
+            name="title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            placeholder="e.g. buy groceries"
             maxLength={500}
             disabled={busy}
             required
-            aria-label="Item content"
+            aria-label="Task title"
           />
           <button
             type="submit"
             className={styles.submit}
-            disabled={busy || content.trim().length === 0}
+            disabled={busy || title.trim().length === 0}
           >
             {busy ? 'Adding…' : 'Add'}
           </button>

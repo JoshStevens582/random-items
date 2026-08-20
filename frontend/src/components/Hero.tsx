@@ -11,9 +11,9 @@ export function Hero({ onShuffle, busy, error }: HeroProps) {
     <header className={styles.hero}>
       <div className={styles.heroAtmosphere} aria-hidden="true" />
       <div className={styles.heroInner}>
-        <p className={styles.brand}>Random Items</p>
+        <p className={styles.brand}>Random Tasks</p>
         <p className={styles.tagline}>
-          Collect strings. Shuffle them. Keep what matters.
+          Collect tasks. Shuffle them. Keep what matters.
         </p>
         <button
           type="button"

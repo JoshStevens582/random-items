@@ -1,9 +1,9 @@
 import type {
-  Item,
-  ItemCreate,
-  ItemListResponse,
-  ItemUpdate,
-  RandomItemsResponse,
+  RandomTasksResponse,
+  Task,
+  TaskCreate,
+  TaskListResponse,
+  TaskUpdate,
 } from '../types'
 
 const API_BASE_URL =
@@ -71,33 +71,33 @@ async function request<T>(
   return (await response.json()) as T
 }
 
-export function listItems(): Promise<ItemListResponse> {
-  return request<ItemListResponse>('/items')
+export function listTasks(): Promise<TaskListResponse> {
+  return request<TaskListResponse>('/tasks')
 }
 
-export function createItem(payload: ItemCreate): Promise<Item> {
-  return request<Item>('/items', {
+export function createTask(payload: TaskCreate): Promise<Task> {
+  return request<Task>('/tasks', {
     method: 'POST',
     body: JSON.stringify(payload),
   })
 }
 
-export function updateItem(
-  itemId: number,
-  payload: ItemUpdate,
-): Promise<Item> {
-  return request<Item>(`/items/${itemId}`, {
+export function updateTask(
+  taskId: number,
+  payload: TaskUpdate,
+): Promise<Task> {
+  return request<Task>(`/tasks/${taskId}`, {
     method: 'PUT',
     body: JSON.stringify(payload),
   })
 }
 
-export function deleteItem(itemId: number): Promise<void> {
-  return request<void>(`/items/${itemId}`, {
+export function deleteTask(taskId: number): Promise<void> {
+  return request<void>(`/tasks/${taskId}`, {
     method: 'DELETE',
   })
 }
 
-export function getRandomItems(): Promise<RandomItemsResponse> {
-  return request<RandomItemsResponse>('/items/random')
+export function getRandomTasks(): Promise<RandomTasksResponse> {
+  return request<RandomTasksResponse>('/tasks/random')
 }

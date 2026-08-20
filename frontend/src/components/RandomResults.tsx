@@ -1,11 +1,11 @@
 import styles from './RandomResults.module.css'
 
 interface RandomResultsProps {
-  items: string[]
+  tasks: string[]
   visible: boolean
 }
 
-export function RandomResults({ items, visible }: RandomResultsProps) {
+export function RandomResults({ tasks, visible }: RandomResultsProps) {
   if (!visible) {
     return null
   }
@@ -17,19 +17,19 @@ export function RandomResults({ items, visible }: RandomResultsProps) {
         <p className={styles.subtitle}>
           Fresh permutation from your collection.
         </p>
-        {items.length === 0 ? (
+        {tasks.length === 0 ? (
           <p className={styles.empty}>
-            No items yet. Add a few below, then shuffle again.
+            No tasks yet. Add a few below, then shuffle again.
           </p>
         ) : (
           <ol className={styles.list}>
-            {items.map((content, index) => (
+            {tasks.map((title, index) => (
               <li
-                key={`${content}-${index}`}
+                key={`${title}-${index}`}
                 className={styles.item}
               >
                 <span className={styles.index}>{index + 1}</span>
-                <p className={styles.text}>{content}</p>
+                <p className={styles.text}>{title}</p>
               </li>
             ))}
           </ol>

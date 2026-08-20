@@ -1,3 +1,3 @@
-from random_items.db_models.item import Item
+from random_items.db_models.task import Task
 
-__all__ = ["Item"]
+__all__ = ["Task"]

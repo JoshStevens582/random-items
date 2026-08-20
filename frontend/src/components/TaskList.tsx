@@ -1,31 +1,31 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import type { Item } from '../types'
-import styles from './ItemList.module.css'
+import type { Task } from '../types'
+import styles from './TaskList.module.css'
 
-interface ItemListProps {
-  items: Item[]
+interface TaskListProps {
+  tasks: Task[]
   loading: boolean
   error: string | null
   busyId: number | null
-  onUpdate: (id: number, content: string) => Promise<void>
+  onUpdate: (id: number, title: string) => Promise<void>
   onDelete: (id: number) => Promise<void>
 }
 
-export function ItemList({
-  items,
+export function TaskList({
+  tasks,
   loading,
   error,
   busyId,
   onUpdate,
   onDelete,
-}: ItemListProps) {
+}: TaskListProps) {
   const [editingId, setEditingId] = useState<number | null>(null)
   const [draft, setDraft] = useState('')
 
-  function startEdit(item: Item) {
-    setEditingId(item.id)
-    setDraft(item.content)
+  function startEdit(task: Task) {
+    setEditingId(task.id)
+    setDraft(task.title)
   }
 
   function cancelEdit() {
@@ -50,29 +50,29 @@ export function ItemList({
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
-        <h2 className={styles.title}>Your collection</h2>
+        <h2 className={styles.title}>Your tasks</h2>
         <p className={styles.subtitle}>
-          Edit or remove items anytime.
+          Edit or remove tasks anytime.
         </p>
 
-        {loading ? <p className={styles.status}>Loading items…</p> : null}
+        {loading ? <p className={styles.status}>Loading tasks…</p> : null}
         {error ? <p className={styles.error}>{error}</p> : null}
 
-        {!loading && !error && items.length === 0 ? (
-          <p className={styles.status}>No items yet. Add one above.</p>
+        {!loading && !error && tasks.length === 0 ? (
+          <p className={styles.status}>No tasks yet. Add one above.</p>
         ) : null}
 
         <ul className={styles.list}>
-          {items.map((item) => {
-            const rowBusy = busyId === item.id
-            const isEditing = editingId === item.id
+          {tasks.map((task) => {
+            const rowBusy = busyId === task.id
+            const isEditing = editingId === task.id
 
             return (
-              <li key={item.id} className={styles.row}>
+              <li key={task.id} className={styles.row}>
                 {isEditing ? (
                   <form
                     className={styles.editForm}
-                    onSubmit={(event) => handleSave(event, item.id)}
+                    onSubmit={(event) => handleSave(event, task.id)}
                   >
                     <input
                       className={styles.editInput}
@@ -80,7 +80,7 @@ export function ItemList({
                       onChange={(event) => setDraft(event.target.value)}
                       maxLength={500}
                       disabled={rowBusy}
-                      aria-label="Edit item content"
+                      aria-label="Edit task title"
                       autoFocus
                     />
                     <div className={styles.actions}>
@@ -104,17 +104,17 @@ export function ItemList({
                 ) : (
                   <>
                     <div className={styles.content}>
-                      <p>{item.content}</p>
+                      <p>{task.title}</p>
                       <span className={styles.meta}>
-                        #{item.id} ·{' '}
-                        {new Date(item.created_at).toLocaleString()}
+                        #{task.id} ·{' '}
+                        {new Date(task.created_at).toLocaleString()}
                       </span>
                     </div>
                     <div className={styles.actions}>
                       <button
                         type="button"
                         className={styles.action}
-                        onClick={() => startEdit(item)}
+                        onClick={() => startEdit(task)}
                         disabled={busyId !== null}
                       >
                         Edit
@@ -122,7 +122,7 @@ export function ItemList({
                       <button
                         type="button"
                         className={`${styles.action} ${styles.danger}`}
-                        onClick={() => onDelete(item.id)}
+                        onClick={() => onDelete(task.id)}
                         disabled={busyId !== null}
                       >
                         {rowBusy ? 'Deleting…' : 'Delete'}

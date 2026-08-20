@@ -1,3 +1,3 @@
-from random_items.repositories.item_repository import ItemRepository
+from random_items.repositories.task_repository import TaskRepository
 
-__all__ = ["ItemRepository"]
+__all__ = ["TaskRepository"]
