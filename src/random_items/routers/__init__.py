@@ -1,3 +1,3 @@
-from random_items.routers.items import router as items_router
+from random_items.routers.tasks import router as tasks_router
 
-__all__ = ["items_router"]
+__all__ = ["tasks_router"]

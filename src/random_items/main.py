@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from random_items.config import settings
-from random_items.routers.items import router as items_router
+from random_items.routers.tasks import router as tasks_router
 
 app = FastAPI(title=settings.app_title)
 app.add_middleware(
@@ -13,7 +13,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.include_router(items_router, prefix="/items", tags=["items"])
+app.include_router(tasks_router, prefix="/tasks", tags=["tasks"])
 
 
 @app.get("/health")

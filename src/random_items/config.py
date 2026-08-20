@@ -33,7 +33,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    app_title: str = "Random Items API"
+    app_title: str = "Random Tasks API"
     database_url: str = _DEFAULT_DATABASE_URL
     cors_origins: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: list(_DEFAULT_CORS_ORIGINS)

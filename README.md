@@ -1,6 +1,6 @@
 # Random Items
 
-Save short strings, then shuffle them into a random order.
+Save short task titles, then shuffle them into a random order.
 
 **Backend:** Python 3.12 · FastAPI · SQLAlchemy · Alembic · SQLite  
 **Frontend:** React · TypeScript · Vite
@@ -9,7 +9,7 @@ Save short strings, then shuffle them into a random order.
 
 ## What it does
 
-- Add, edit, and delete items
+- Add, edit, and delete tasks
 - Shuffle the collection into a random order
 - REST API with docs at `/docs`
 
@@ -28,18 +28,18 @@ This project is being built in stages — from a simple random-items demo toward
 | 3 | Backend tests and GitHub Actions CI | [commit](https://github.com/JoshStevens582/random-items/commit/5738572) |
 | 4 | Frontend lockfile sync and CI on Node 22 | [commit](https://github.com/JoshStevens582/random-items/commit/91a2155) |
 | 5 | Environment-based API config for portable deployment | [commit](https://github.com/JoshStevens582/random-items/commit/4be0250) |
+| 6 | Alembic migrations — versioned schema changes without data loss | [PR #1](https://github.com/JoshStevens582/random-items/pull/1) |
 
 ### In progress
 
 | Stage | What changed | Link |
 |-------|--------------|------|
-| 6 | Alembic migrations — versioned schema changes without data loss | [PR #1](https://github.com/JoshStevens582/random-items/pull/1) |
+| 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) | [branch](https://github.com/JoshStevens582/random-items/tree/feat/item-to-task) |
 
 ### Planned (task manager)
 
 | Stage | What changed |
 |-------|--------------|
-| 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) |
 | 8 | Task status workflow (`todo`, `in_progress`, `done`) |
 | 9 | Priority and due dates |
 | 10 | Task dashboard UI (filters, badges, replace shuffle flow) |
@@ -99,11 +99,11 @@ The API can run on another machine without editing Python. Copy `.env.example` t
 
 | Variable | Local default | What it is |
 |----------|-----------------|------------|
-| `DATABASE_URL` | SQLite file `items.db` in this repo | Where items are stored |
+| `DATABASE_URL` | SQLite file `items.db` in this repo | Where tasks are stored |
 | `CORS_ORIGINS` | `http://127.0.0.1:5173`, `http://localhost:5173` | Which website may call the API |
 | `HOST` / `PORT` | `127.0.0.1:8000` | Where the API listens |
 | `ENV` | `development` | Use `production` to turn reload off |
-| `APP_TITLE` | `Random Items API` | API title in `/docs` |
+| `APP_TITLE` | `Random Tasks API` | API title in `/docs` |
 
 If the website should call an API that is not `http://127.0.0.1:8000`, copy `frontend/.env.example` to `frontend/.env` and set `VITE_API_BASE_URL`.
 
@@ -120,17 +120,17 @@ GitHub Actions runs backend tests and a frontend production build on every push 
 
 | Method | Path            | Description                          |
 |--------|-----------------|--------------------------------------|
-| POST   | `/items`        | Create a new string item             |
-| GET    | `/items`        | List all items                       |
-| GET    | `/items/random` | All item strings in randomized order |
-| GET    | `/items/{id}`   | Get a single item by ID              |
-| PUT    | `/items/{id}`   | Update an item                       |
-| DELETE | `/items/{id}`   | Delete an item                       |
+| POST   | `/tasks`        | Create a new task                    |
+| GET    | `/tasks`        | List all tasks                       |
+| GET    | `/tasks/random` | All task titles in randomized order  |
+| GET    | `/tasks/{id}`   | Get a single task by ID              |
+| PUT    | `/tasks/{id}`   | Update a task                        |
+| DELETE | `/tasks/{id}`   | Delete a task                        |
 | GET    | `/health`       | Health check                         |
 
 ```bash
-curl -X POST http://127.0.0.1:8000/items -H "Content-Type: application/json" -d "{\"content\": \"apple\"}"
-curl http://127.0.0.1:8000/items/random
+curl -X POST http://127.0.0.1:8000/tasks -H "Content-Type: application/json" -d "{\"title\": \"apple\"}"
+curl http://127.0.0.1:8000/tasks/random
 ```
 
 ## Project layout

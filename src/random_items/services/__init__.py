@@ -1,3 +1,3 @@
-from random_items.services.item_service import ItemService
+from random_items.services.task_service import TaskService
 
-__all__ = ["ItemService"]
+__all__ = ["TaskService"]

@@ -5,7 +5,7 @@ from sqlalchemy import engine_from_config, pool
 
 from random_items.config import settings
 from random_items.database import Base, connect_args_for
-from random_items.db_models.item import Item  # noqa: F401
+from random_items.db_models.task import Task  # noqa: F401
 
 config = context.config
 

@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from random_items.database import Base
-from random_items.db_models.item import Item  # noqa: F401
+from random_items.db_models.task import Task  # noqa: F401
 from random_items.dependencies import get_db
 from random_items.main import app
 
