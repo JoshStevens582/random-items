@@ -9,7 +9,7 @@ Save short task titles, then shuffle them into a random order.
 
 ## What it does
 
-- Add, edit, and delete tasks
+- Add, edit, delete, and set status on tasks (`todo`, `in_progress`, `done`)
 - Shuffle the collection into a random order
 - REST API with docs at `/docs`
 
@@ -30,12 +30,12 @@ This project is being built in stages — from a simple random-items demo toward
 | 5 | Environment-based API config for portable deployment | [commit](https://github.com/JoshStevens582/random-items/commit/4be0250) |
 | 6 | Alembic migrations — versioned schema changes without data loss | [PR #1](https://github.com/JoshStevens582/random-items/pull/1) |
 | 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) | [PR #2](https://github.com/JoshStevens582/random-items/pull/2) |
+| 8 | Task status workflow (`todo`, `in_progress`, `done`) | [PR #3](https://github.com/JoshStevens582/random-items/pull/3) |
 
 ### Planned (task manager)
 
 | Stage | What changed |
 |-------|--------------|
-| 8 | Task status workflow (`todo`, `in_progress`, `done`) |
 | 9 | Priority and due dates |
 | 10 | Task dashboard UI (filters, badges, replace shuffle flow) |
 | 11 | Notes, `updated_at`, and polish |

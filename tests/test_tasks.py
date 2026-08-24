@@ -6,6 +6,7 @@ def test_create_task(client: TestClient) -> None:
     assert response.status_code == 201
     data = response.json()
     assert data["title"] == "apple"
+    assert data["status"] == "todo"
     assert "id" in data
     assert "created_at" in data
 
@@ -83,6 +84,39 @@ def test_create_task_empty_title(client: TestClient) -> None:
 
 def test_create_task_too_long_title(client: TestClient) -> None:
     response = client.post("/tasks", json={"title": "x" * 501})
+    assert response.status_code == 422
+
+
+def test_create_task_with_status(client: TestClient) -> None:
+    response = client.post(
+        "/tasks",
+        json={"title": "apple", "status": "in_progress"},
+    )
+    assert response.status_code == 201
+    assert response.json()["status"] == "in_progress"
+
+
+def test_create_task_invalid_status(client: TestClient) -> None:
+    response = client.post("/tasks", json={"title": "apple", "status": "blocked"})
+    assert response.status_code == 422
+
+
+def test_update_task_status(client: TestClient) -> None:
+    create_response = client.post("/tasks", json={"title": "apple"})
+    task_id = create_response.json()["id"]
+
+    response = client.put(f"/tasks/{task_id}", json={"status": "done"})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "done"
+    assert data["title"] == "apple"
+
+
+def test_update_task_invalid_status(client: TestClient) -> None:
+    create_response = client.post("/tasks", json={"title": "apple"})
+    task_id = create_response.json()["id"]
+
+    response = client.put(f"/tasks/{task_id}", json={"status": "blocked"})
     assert response.status_code == 422
 
 
