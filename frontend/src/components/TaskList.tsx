@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import type { Task } from '../types'
+import type { Task, TaskStatus } from '../types'
 import styles from './TaskList.module.css'
+
+const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
+  { value: 'todo', label: 'To do' },
+  { value: 'in_progress', label: 'In progress' },
+  { value: 'done', label: 'Done' },
+]
 
 interface TaskListProps {
   tasks: Task[]
@@ -9,6 +15,7 @@ interface TaskListProps {
   error: string | null
   busyId: number | null
   onUpdate: (id: number, title: string) => Promise<void>
+  onStatusChange: (id: number, status: TaskStatus) => Promise<void>
   onDelete: (id: number) => Promise<void>
 }
 
@@ -18,6 +25,7 @@ export function TaskList({
   error,
   busyId,
   onUpdate,
+  onStatusChange,
   onDelete,
 }: TaskListProps) {
   const [editingId, setEditingId] = useState<number | null>(null)
@@ -111,6 +119,24 @@ export function TaskList({
                       </span>
                     </div>
                     <div className={styles.actions}>
+                      <select
+                        className={styles.statusSelect}
+                        value={task.status}
+                        disabled={busyId !== null}
+                        aria-label={`Status for ${task.title}`}
+                        onChange={(event) => {
+                          void onStatusChange(
+                            task.id,
+                            event.target.value as TaskStatus,
+                          )
+                        }}
+                      >
+                        {STATUS_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
                       <button
                         type="button"
                         className={styles.action}
@@ -125,7 +151,7 @@ export function TaskList({
                         onClick={() => onDelete(task.id)}
                         disabled={busyId !== null}
                       >
-                        {rowBusy ? 'Deleting…' : 'Delete'}
+                        Delete
                       </button>
                     </div>
                   </>

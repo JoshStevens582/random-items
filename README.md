@@ -9,7 +9,7 @@ Save short task titles, then shuffle them into a random order.
 
 ## What it does
 
-- Add, edit, and delete tasks
+- Add, edit, delete, and set status on tasks (`todo`, `in_progress`, `done`)
 - Shuffle the collection into a random order
 - REST API with docs at `/docs`
 

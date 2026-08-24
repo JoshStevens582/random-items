@@ -10,7 +10,11 @@ from random_items.models.task_update import TaskUpdate
 
 class TaskRepository:
     def create(self, db: Session, payload: TaskCreate) -> Task:
-        task = Task(title=payload.title, created_at=datetime.now(UTC))
+        task = Task(
+            title=payload.title,
+            status=payload.status.value,
+            created_at=datetime.now(UTC),
+        )
         db.add(task)
         db.commit()
         db.refresh(task)
@@ -26,6 +30,8 @@ class TaskRepository:
     def update(self, db: Session, task: Task, payload: TaskUpdate) -> Task:
         if payload.title is not None:
             task.title = payload.title
+        if payload.status is not None:
+            task.status = payload.status.value
         db.commit()
         db.refresh(task)
         return task
