@@ -1,0 +1,28 @@
+---
+description: Project workflow, roadmap stages, and naming boundaries for the task-manager evolution
+alwaysApply: true
+---
+
+# Project workflow
+
+This app is evolving from a random-items demo into a personal task manager in small, reviewable stages (see README Evolution).
+
+## Delivery pattern
+
+- One stage per branch → PR → merge to `master` → delete the branch.
+- Next planned stages: 9 priority/due dates, 10 dashboard UI, 11 notes/`updated_at`.
+- Do not combine multiple roadmap stages in one PR unless the user explicitly asks.
+
+## Keep until a dedicated stage says otherwise
+
+- Python package path: `src/random_items/` (imports stay `random_items.*`)
+- CLI entry: `uv run random-items`
+- Default SQLite file: `items.db` (table is already `tasks`)
+- GitHub repo slug may stay `random-items`
+
+## Schema and product
+
+- Schema changes go through Alembic (`uv run alembic upgrade head`). Do not bring back startup `create_all` for the real DB.
+- Domain language is **Task** / `title` / `/tasks` (not Item / `content` / `/items`).
+- No auth, teams, or multi-user features unless the user asks.
+- Prefer matching existing patterns over new frameworks or large refactors.

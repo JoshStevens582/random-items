@@ -1,10 +1,9 @@
 .hero {
   position: relative;
-  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-xl) var(--space-md);
+  padding: var(--space-xl) var(--space-md) var(--space-lg);
   overflow: hidden;
   isolation: isolate;
 }
@@ -37,9 +36,9 @@
 }
 
 .brand {
-  margin: 0 0 var(--space-md);
+  margin: 0 0 var(--space-xs);
   font-family: var(--font-display);
-  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 0.95;
@@ -47,49 +46,8 @@
 }
 
 .tagline {
-  margin: 0 0 var(--space-lg);
-  max-width: 22rem;
+  margin: 0;
+  max-width: 28rem;
   font-size: 1.15rem;
   color: var(--color-ink-muted);
-}
-
-.shuffleButton {
-  appearance: none;
-  border: none;
-  border-radius: var(--radius);
-  padding: 0.9rem 1.75rem;
-  background: var(--color-accent);
-  color: #f5f8f6;
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  box-shadow: var(--shadow-soft);
-  transition:
-    background 180ms var(--ease-out),
-    transform 180ms var(--ease-out),
-    box-shadow 180ms var(--ease-out);
-}
-
-.shuffleButton:hover:not(:disabled) {
-  background: var(--color-accent-hover);
-  transform: translateY(-1px);
-}
-
-.shuffleButton:active:not(:disabled) {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: 0 8px 18px rgba(26, 31, 28, 0.1);
-}
-
-.heroError {
-  margin: var(--space-md) 0 0;
-  color: var(--color-danger);
-  font-size: 0.95rem;
-}
-
-@media (max-width: 640px) {
-  .hero {
-    align-items: flex-end;
-    padding-bottom: 18vh;
-  }
 }

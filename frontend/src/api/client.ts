@@ -1,5 +1,4 @@
 import type {
-  RandomTasksResponse,
   Task,
   TaskCreate,
   TaskListResponse,
@@ -96,8 +95,4 @@ export function deleteTask(taskId: number): Promise<void> {
   return request<void>(`/tasks/${taskId}`, {
     method: 'DELETE',
   })
-}
-
-export function getRandomTasks(): Promise<RandomTasksResponse> {
-  return request<RandomTasksResponse>('/tasks/random')
 }

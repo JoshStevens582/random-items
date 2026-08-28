@@ -1,0 +1,34 @@
+---
+description: React frontend API client, components, and Vite conventions
+globs: frontend/src/**/*.{ts,tsx,css},frontend/vite.config.ts
+alwaysApply: false
+---
+
+# Frontend (React + Vite)
+
+## Structure
+
+- Types: `frontend/src/types.ts`
+- HTTP: `frontend/src/api/client.ts` only (no raw `fetch` in components)
+- UI: `components/` with colocated `*.module.css`
+- State for list/create/edit/shuffle lives in `App.tsx` unless a stage needs more
+
+## API contract
+
+- Base URL: `VITE_API_BASE_URL` or `http://127.0.0.1:8000`
+- Paths: `/tasks`, `/tasks/random`; fields: `title`, `status`, list key `tasks`
+- Surface failures with `ApiError` / parent error props (same pattern as today)
+
+```typescript
+// ✅ GOOD — go through the client
+const created = await createTask({ title })
+
+// ❌ BAD — fetch inside a component
+await fetch('http://127.0.0.1:8000/tasks', { ... })
+```
+
+## UI conventions
+
+- Functional components; CSS modules (not new CSS frameworks unless asked).
+- Preserve the current visual language when adding features; Stage 10 replaces shuffle with a dashboard — do not rip that out early.
+- Keep Vite `server.host` as `127.0.0.1` so `http://127.0.0.1:5173` works on Windows.

@@ -1,0 +1,20 @@
+﻿# Secrets — never send to AI
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.local
+
+# Local database
+items.db
+*.db
+
+# Dependencies and build output
+.venv/
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+
+# Lockfiles (large, not useful in context)
+uv.lock
+frontend/package-lock.json

@@ -3,15 +3,13 @@ import {
   ApiError,
   createTask,
   deleteTask,
-  getRandomTasks,
   listTasks,
   updateTask,
 } from './api/client'
 import { AddTaskForm } from './components/AddTaskForm'
 import { Hero } from './components/Hero'
-import { RandomResults } from './components/RandomResults'
 import { TaskList } from './components/TaskList'
-import type { Task, TaskStatus } from './types'
+import type { Task, TaskPriority, TaskStatus, TaskUpdate } from './types'
 import styles from './App.module.css'
 
 function messageFromError(error: unknown): string {
@@ -31,11 +29,6 @@ export default function App() {
   const [createBusy, setCreateBusy] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
   const [rowBusyId, setRowBusyId] = useState<number | null>(null)
-  const [shuffleBusy, setShuffleBusy] = useState(false)
-  const [shuffleError, setShuffleError] = useState<string | null>(null)
-  const [randomTasks, setRandomTasks] = useState<string[]>([])
-  const [showRandom, setShowRandom] = useState(false)
-  const [shuffleKey, setShuffleKey] = useState(0)
 
   const refreshTasks = useCallback(async () => {
     setListLoading(true)
@@ -54,26 +47,19 @@ export default function App() {
     void refreshTasks()
   }, [refreshTasks])
 
-  async function handleShuffle() {
-    setShuffleBusy(true)
-    setShuffleError(null)
-    try {
-      const response = await getRandomTasks()
-      setRandomTasks(response.tasks)
-      setShowRandom(true)
-      setShuffleKey((value) => value + 1)
-    } catch (error) {
-      setShuffleError(messageFromError(error))
-    } finally {
-      setShuffleBusy(false)
-    }
-  }
-
-  async function handleCreate(title: string) {
+  async function handleCreate(
+    title: string,
+    priority: TaskPriority = 'medium',
+    dueDate: string | null = null,
+  ) {
     setCreateBusy(true)
     setCreateError(null)
     try {
-      const created = await createTask({ title })
+      const created = await createTask({
+        title,
+        priority,
+        due_date: dueDate,
+      })
       setTasks((current) => [...current, created])
     } catch (error) {
       setCreateError(messageFromError(error))
@@ -83,11 +69,11 @@ export default function App() {
     }
   }
 
-  async function handleUpdate(id: number, title: string) {
+  async function handleUpdate(id: number, payload: TaskUpdate) {
     setRowBusyId(id)
     setListError(null)
     try {
-      const updated = await updateTask(id, { title })
+      const updated = await updateTask(id, payload)
       setTasks((current) =>
         current.map((task) => (task.id === id ? updated : task)),
       )
@@ -114,6 +100,21 @@ export default function App() {
     }
   }
 
+  async function handlePriorityChange(id: number, priority: TaskPriority) {
+    setRowBusyId(id)
+    setListError(null)
+    try {
+      const updated = await updateTask(id, { priority })
+      setTasks((current) =>
+        current.map((task) => (task.id === id ? updated : task)),
+      )
+    } catch (error) {
+      setListError(messageFromError(error))
+    } finally {
+      setRowBusyId(null)
+    }
+  }
+
   async function handleDelete(id: number) {
     setRowBusyId(id)
     setListError(null)
@@ -129,16 +130,7 @@ export default function App() {
 
   return (
     <div className={styles.app}>
-      <Hero
-        onShuffle={() => void handleShuffle()}
-        busy={shuffleBusy}
-        error={shuffleError}
-      />
-      <RandomResults
-        key={shuffleKey}
-        tasks={randomTasks}
-        visible={showRandom}
-      />
+      <Hero />
       <main className={styles.manage}>
         <AddTaskForm
           onSubmit={handleCreate}
@@ -152,6 +144,7 @@ export default function App() {
           busyId={rowBusyId}
           onUpdate={handleUpdate}
           onStatusChange={handleStatusChange}
+          onPriorityChange={handlePriorityChange}
           onDelete={handleDelete}
         />
       </main>

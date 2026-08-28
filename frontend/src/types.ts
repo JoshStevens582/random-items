@@ -1,9 +1,12 @@
 export type TaskStatus = 'todo' | 'in_progress' | 'done'
+export type TaskPriority = 'low' | 'medium' | 'high'
 
 export interface Task {
   id: number
   title: string
   status: TaskStatus
+  priority: TaskPriority
+  due_date: string | null
   created_at: string
 }
 
@@ -12,17 +15,16 @@ export interface TaskListResponse {
   count: number
 }
 
-export interface RandomTasksResponse {
-  tasks: string[]
-  count: number
-}
-
 export interface TaskCreate {
   title: string
   status?: TaskStatus
+  priority?: TaskPriority
+  due_date?: string | null
 }
 
 export interface TaskUpdate {
   title?: string
   status?: TaskStatus
+  priority?: TaskPriority
+  due_date?: string | null
 }
