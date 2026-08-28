@@ -32,12 +32,12 @@ This project is being built in stages — from a simple random-items demo toward
 | 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) | [PR #2](https://github.com/JoshStevens582/random-items/pull/2) |
 | 8 | Task status workflow (`todo`, `in_progress`, `done`) | [PR #3](https://github.com/JoshStevens582/random-items/pull/3) |
 | 9 | Priority and due dates | [PR #4](https://github.com/JoshStevens582/random-items/pull/4) |
+| 10 | Task dashboard UI (filters, badges, replace shuffle flow) | [PR #5](https://github.com/JoshStevens582/random-items/pull/5) |
 
 ### Planned (task manager)
 
 | Stage | What changed |
 |-------|--------------|
-| 10 | Task dashboard UI (filters, badges, replace shuffle flow) |
 | 11 | Notes, `updated_at`, and polish |
 
 From stage 8 onward, each step will be its own branch → PR → merge.
