@@ -31,12 +31,12 @@ This project is being built in stages — from a simple random-items demo toward
 | 6 | Alembic migrations — versioned schema changes without data loss | [PR #1](https://github.com/JoshStevens582/random-items/pull/1) |
 | 7 | Refactor Item → Task domain (`content` → `title`, `/items` → `/tasks`) | [PR #2](https://github.com/JoshStevens582/random-items/pull/2) |
 | 8 | Task status workflow (`todo`, `in_progress`, `done`) | [PR #3](https://github.com/JoshStevens582/random-items/pull/3) |
+| 9 | Priority and due dates | [PR #4](https://github.com/JoshStevens582/random-items/pull/4) |
 
 ### Planned (task manager)
 
 | Stage | What changed |
 |-------|--------------|
-| 9 | Priority and due dates |
 | 10 | Task dashboard UI (filters, badges, replace shuffle flow) |
 | 11 | Notes, `updated_at`, and polish |
 
