@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-import type { Task, TaskStatus } from '../types'
+import type { Task, TaskPriority, TaskStatus, TaskUpdate } from '../types'
 import styles from './TaskList.module.css'
 
 const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
@@ -9,13 +9,20 @@ const STATUS_OPTIONS: { value: TaskStatus; label: string }[] = [
   { value: 'done', label: 'Done' },
 ]
 
+const PRIORITY_OPTIONS: { value: TaskPriority; label: string }[] = [
+  { value: 'low', label: 'Low' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'high', label: 'High' },
+]
+
 interface TaskListProps {
   tasks: Task[]
   loading: boolean
   error: string | null
   busyId: number | null
-  onUpdate: (id: number, title: string) => Promise<void>
+  onUpdate: (id: number, payload: TaskUpdate) => Promise<void>
   onStatusChange: (id: number, status: TaskStatus) => Promise<void>
+  onPriorityChange: (id: number, priority: TaskPriority) => Promise<void>
   onDelete: (id: number) => Promise<void>
 }
 
@@ -26,29 +33,40 @@ export function TaskList({
   busyId,
   onUpdate,
   onStatusChange,
+  onPriorityChange,
   onDelete,
 }: TaskListProps) {
   const [editingId, setEditingId] = useState<number | null>(null)
-  const [draft, setDraft] = useState('')
+  const [draftTitle, setDraftTitle] = useState('')
+  const [draftPriority, setDraftPriority] = useState<TaskPriority>('medium')
+  const [draftDueDate, setDraftDueDate] = useState('')
 
   function startEdit(task: Task) {
     setEditingId(task.id)
-    setDraft(task.title)
+    setDraftTitle(task.title)
+    setDraftPriority(task.priority)
+    setDraftDueDate(task.due_date ?? '')
   }
 
   function cancelEdit() {
     setEditingId(null)
-    setDraft('')
+    setDraftTitle('')
+    setDraftPriority('medium')
+    setDraftDueDate('')
   }
 
   async function handleSave(event: FormEvent<HTMLFormElement>, id: number) {
     event.preventDefault()
-    const trimmed = draft.trim()
+    const trimmed = draftTitle.trim()
     if (!trimmed) {
       return
     }
     try {
-      await onUpdate(id, trimmed)
+      await onUpdate(id, {
+        title: trimmed,
+        priority: draftPriority,
+        due_date: draftDueDate ? draftDueDate : null,
+      })
       cancelEdit()
     } catch {
       // Error is surfaced by the parent via the error prop.
@@ -60,7 +78,7 @@ export function TaskList({
       <div className={styles.inner}>
         <h2 className={styles.title}>Your tasks</h2>
         <p className={styles.subtitle}>
-          Edit or remove tasks anytime.
+          Edit, prioritize, set due dates, or remove tasks anytime.
         </p>
 
         {loading ? <p className={styles.status}>Loading tasks…</p> : null}
@@ -84,18 +102,41 @@ export function TaskList({
                   >
                     <input
                       className={styles.editInput}
-                      value={draft}
-                      onChange={(event) => setDraft(event.target.value)}
+                      value={draftTitle}
+                      onChange={(event) => setDraftTitle(event.target.value)}
                       maxLength={500}
                       disabled={rowBusy}
                       aria-label="Edit task title"
                       autoFocus
                     />
+                    <select
+                      className={styles.select}
+                      value={draftPriority}
+                      onChange={(event) =>
+                        setDraftPriority(event.target.value as TaskPriority)
+                      }
+                      disabled={rowBusy}
+                      aria-label="Edit task priority"
+                    >
+                      {PRIORITY_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label} priority
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      className={styles.dateInput}
+                      type="date"
+                      value={draftDueDate}
+                      onChange={(event) => setDraftDueDate(event.target.value)}
+                      disabled={rowBusy}
+                      aria-label="Edit task due date"
+                    />
                     <div className={styles.actions}>
                       <button
                         type="submit"
                         className={styles.action}
-                        disabled={rowBusy || draft.trim().length === 0}
+                        disabled={rowBusy || draftTitle.trim().length === 0}
                       >
                         {rowBusy ? 'Saving…' : 'Save'}
                       </button>
@@ -112,15 +153,25 @@ export function TaskList({
                 ) : (
                   <>
                     <div className={styles.content}>
-                      <p>{task.title}</p>
+                      <div className={styles.titleRow}>
+                        <p className={styles.taskTitle}>{task.title}</p>
+                        <span
+                          className={`${styles.priorityBadge} ${
+                            styles[`priority_${task.priority}`]
+                          }`}
+                        >
+                          {task.priority}
+                        </span>
+                      </div>
                       <span className={styles.meta}>
                         #{task.id} ·{' '}
                         {new Date(task.created_at).toLocaleString()}
+                        {task.due_date ? ` · Due: ${task.due_date}` : ''}
                       </span>
                     </div>
                     <div className={styles.actions}>
                       <select
-                        className={styles.statusSelect}
+                        className={styles.select}
                         value={task.status}
                         disabled={busyId !== null}
                         aria-label={`Status for ${task.title}`}
@@ -132,6 +183,24 @@ export function TaskList({
                         }}
                       >
                         {STATUS_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <select
+                        className={styles.select}
+                        value={task.priority}
+                        disabled={busyId !== null}
+                        aria-label={`Priority for ${task.title}`}
+                        onChange={(event) => {
+                          void onPriorityChange(
+                            task.id,
+                            event.target.value as TaskPriority,
+                          )
+                        }}
+                      >
+                        {PRIORITY_OPTIONS.map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.label}
                           </option>

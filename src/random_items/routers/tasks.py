@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Response, status
 
 from random_items.dependencies import DbSession
-from random_items.models.random_tasks_response import RandomTasksResponse
 from random_items.models.task_create import TaskCreate
 from random_items.models.task_list_response import TaskListResponse
 from random_items.models.task_response import TaskResponse
@@ -20,11 +19,6 @@ def create_task(payload: TaskCreate, db: DbSession) -> TaskResponse:
 @router.get("", response_model=TaskListResponse)
 def list_tasks(db: DbSession) -> TaskListResponse:
     return task_service.get_all(db)
-
-
-@router.get("/random", response_model=RandomTasksResponse)
-def get_random_tasks(db: DbSession) -> RandomTasksResponse:
-    return task_service.get_randomized(db)
 
 
 @router.get("/{task_id}", response_model=TaskResponse)

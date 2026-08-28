@@ -1,8 +1,5 @@
-import random
-
 from sqlalchemy.orm import Session
 
-from random_items.models.random_tasks_response import RandomTasksResponse
 from random_items.models.task_create import TaskCreate
 from random_items.models.task_list_response import TaskListResponse
 from random_items.models.task_response import TaskResponse
@@ -47,9 +44,3 @@ class TaskService:
             return False
         self._repository.delete(db, task)
         return True
-
-    def get_randomized(self, db: Session) -> RandomTasksResponse:
-        tasks = self._repository.get_all(db)
-        titles = [task.title for task in tasks]
-        random.shuffle(titles)
-        return RandomTasksResponse(tasks=titles, count=len(titles))

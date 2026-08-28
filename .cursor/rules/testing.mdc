@@ -1,0 +1,12 @@
+---
+description: Backend testing conventions with pytest and fixtures
+globs: tests/**/*.py
+alwaysApply: false
+---
+
+# Testing conventions
+
+- Use pytest and pytest-asyncio for all backend tests.
+- Always mock third-party external API requests (e.g., payment gateways, external HTTP calls).
+- Store fixtures in `tests/conftest.py`.
+- When requested, run `uv run pytest` in the integrated terminal and iterate on code until all tests pass.

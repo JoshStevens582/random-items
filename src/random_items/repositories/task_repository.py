@@ -13,6 +13,8 @@ class TaskRepository:
         task = Task(
             title=payload.title,
             status=payload.status.value,
+            priority=payload.priority.value,
+            due_date=payload.due_date,
             created_at=datetime.now(UTC),
         )
         db.add(task)
@@ -32,6 +34,12 @@ class TaskRepository:
             task.title = payload.title
         if payload.status is not None:
             task.status = payload.status.value
+        if payload.priority is not None:
+            task.priority = payload.priority.value
+        if "due_date" in payload.model_fields_set:
+            task.due_date = payload.due_date
+        elif payload.due_date is not None:
+            task.due_date = payload.due_date
         db.commit()
         db.refresh(task)
         return task

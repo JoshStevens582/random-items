@@ -7,6 +7,8 @@ def test_create_task(client: TestClient) -> None:
     data = response.json()
     assert data["title"] == "apple"
     assert data["status"] == "todo"
+    assert data["priority"] == "medium"
+    assert data["due_date"] is None
     assert "id" in data
     assert "created_at" in data
 
@@ -38,6 +40,8 @@ def test_get_task(client: TestClient) -> None:
     response = client.get(f"/tasks/{task_id}")
     assert response.status_code == 200
     assert response.json()["title"] == "apple"
+    assert response.json()["priority"] == "medium"
+    assert response.json()["due_date"] is None
 
 
 def test_get_task_not_found(client: TestClient) -> None:
@@ -101,6 +105,30 @@ def test_create_task_invalid_status(client: TestClient) -> None:
     assert response.status_code == 422
 
 
+def test_create_task_with_priority_and_due_date(client: TestClient) -> None:
+    response = client.post(
+        "/tasks",
+        json={
+            "title": "buy milk",
+            "priority": "high",
+            "due_date": "2026-09-01",
+        },
+    )
+    assert response.status_code == 201
+    data = response.json()
+    assert data["title"] == "buy milk"
+    assert data["priority"] == "high"
+    assert data["due_date"] == "2026-09-01"
+
+
+def test_create_task_invalid_priority(client: TestClient) -> None:
+    response = client.post(
+        "/tasks",
+        json={"title": "buy milk", "priority": "urgent"},
+    )
+    assert response.status_code == 422
+
+
 def test_update_task_status(client: TestClient) -> None:
     create_response = client.post("/tasks", json={"title": "apple"})
     task_id = create_response.json()["id"]
@@ -120,21 +148,39 @@ def test_update_task_invalid_status(client: TestClient) -> None:
     assert response.status_code == 422
 
 
-def test_get_random_tasks(client: TestClient) -> None:
-    client.post("/tasks", json={"title": "apple"})
-    client.post("/tasks", json={"title": "banana"})
-    client.post("/tasks", json={"title": "cherry"})
+def test_update_task_priority_and_due_date(client: TestClient) -> None:
+    create_response = client.post("/tasks", json={"title": "apple"})
+    task_id = create_response.json()["id"]
 
-    response = client.get("/tasks/random")
+    response = client.put(
+        f"/tasks/{task_id}",
+        json={"priority": "low", "due_date": "2026-10-15"},
+    )
     assert response.status_code == 200
     data = response.json()
-    assert data["count"] == 3
-    assert sorted(data["tasks"]) == ["apple", "banana", "cherry"]
+    assert data["priority"] == "low"
+    assert data["due_date"] == "2026-10-15"
 
 
-def test_get_random_tasks_empty(client: TestClient) -> None:
-    response = client.get("/tasks/random")
+def test_update_task_clear_due_date(client: TestClient) -> None:
+    create_response = client.post(
+        "/tasks",
+        json={"title": "apple", "due_date": "2026-10-15"},
+    )
+    task_id = create_response.json()["id"]
+    assert create_response.json()["due_date"] == "2026-10-15"
+
+    response = client.put(
+        f"/tasks/{task_id}",
+        json={"due_date": None},
+    )
     assert response.status_code == 200
-    data = response.json()
-    assert data["tasks"] == []
-    assert data["count"] == 0
+    assert response.json()["due_date"] is None
+
+
+def test_update_task_invalid_priority(client: TestClient) -> None:
+    create_response = client.post("/tasks", json={"title": "apple"})
+    task_id = create_response.json()["id"]
+
+    response = client.put(f"/tasks/{task_id}", json={"priority": "critical"})
+    assert response.status_code == 422
