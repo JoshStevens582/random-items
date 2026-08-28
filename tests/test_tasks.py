@@ -29,8 +29,71 @@ def test_list_tasks(client: TestClient) -> None:
     assert response.status_code == 200
     data = response.json()
     assert data["count"] == 2
+    # default sort is created_at desc (newest first)
     titles = [task["title"] for task in data["tasks"]]
-    assert titles == ["apple", "banana"]
+    assert "apple" in titles and "banana" in titles
+
+
+def test_list_tasks_filtered_by_status(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "task 1", "status": "todo"})
+    client.post("/tasks", json={"title": "task 2", "status": "in_progress"})
+    client.post("/tasks", json={"title": "task 3", "status": "done"})
+
+    response = client.get("/tasks?status=in_progress")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 1
+    assert data["tasks"][0]["title"] == "task 2"
+    assert data["tasks"][0]["status"] == "in_progress"
+
+
+def test_list_tasks_filtered_by_priority(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "task low", "priority": "low"})
+    client.post("/tasks", json={"title": "task high", "priority": "high"})
+
+    response = client.get("/tasks?priority=high")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 1
+    assert data["tasks"][0]["title"] == "task high"
+    assert data["tasks"][0]["priority"] == "high"
+
+
+def test_list_tasks_filtered_by_status_and_priority(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "t1", "status": "todo", "priority": "high"})
+    client.post("/tasks", json={"title": "t2", "status": "done", "priority": "high"})
+    client.post("/tasks", json={"title": "t3", "status": "todo", "priority": "low"})
+
+    response = client.get("/tasks?status=todo&priority=high")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 1
+    assert data["tasks"][0]["title"] == "t1"
+
+
+def test_list_tasks_sorted_by_due_date(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "no date"})
+    client.post("/tasks", json={"title": "later", "due_date": "2026-12-01"})
+    client.post("/tasks", json={"title": "earlier", "due_date": "2026-09-01"})
+
+    response = client.get("/tasks?sort_by=due_date&sort_order=asc")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["count"] == 3
+    titles = [task["title"] for task in data["tasks"]]
+    # earliest date first, None at the end
+    assert titles == ["earlier", "later", "no date"]
+
+
+def test_list_tasks_invalid_query_params(client: TestClient) -> None:
+    response = client.get("/tasks?status=invalid_status")
+    assert response.status_code == 422
+
+    response = client.get("/tasks?priority=urgent")
+    assert response.status_code == 422
+
+    response = client.get("/tasks?sort_by=non_existent_column")
+    assert response.status_code == 422
 
 
 def test_get_task(client: TestClient) -> None:

@@ -1,5 +1,7 @@
 export type TaskStatus = 'todo' | 'in_progress' | 'done'
 export type TaskPriority = 'low' | 'medium' | 'high'
+export type TaskSortBy = 'created_at' | 'due_date' | 'priority' | 'id'
+export type TaskSortOrder = 'asc' | 'desc'
 
 export interface Task {
   id: number
@@ -27,4 +29,11 @@ export interface TaskUpdate {
   status?: TaskStatus
   priority?: TaskPriority
   due_date?: string | null
+}
+
+export interface TaskFilterParams {
+  status?: TaskStatus | 'all'
+  priority?: TaskPriority | 'all'
+  sort_by?: TaskSortBy
+  sort_order?: TaskSortOrder
 }
