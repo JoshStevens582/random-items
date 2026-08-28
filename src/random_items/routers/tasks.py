@@ -1,9 +1,13 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from typing import Literal
+
+from fastapi import APIRouter, HTTPException, Query, Response, status
 
 from random_items.dependencies import DbSession
 from random_items.models.task_create import TaskCreate
 from random_items.models.task_list_response import TaskListResponse
+from random_items.models.task_priority import TaskPriority
 from random_items.models.task_response import TaskResponse
+from random_items.models.task_status import TaskStatus
 from random_items.models.task_update import TaskUpdate
 from random_items.services.task_service import TaskService
 
@@ -17,8 +21,26 @@ def create_task(payload: TaskCreate, db: DbSession) -> TaskResponse:
 
 
 @router.get("", response_model=TaskListResponse)
-def list_tasks(db: DbSession) -> TaskListResponse:
-    return task_service.get_all(db)
+def list_tasks(
+    db: DbSession,
+    status: TaskStatus | None = Query(default=None, description="Filter tasks by status"),
+    priority: TaskPriority | None = Query(default=None, description="Filter tasks by priority"),
+    sort_by: Literal["created_at", "due_date", "priority", "id"] = Query(
+        default="created_at",
+        description="Field to sort tasks by",
+    ),
+    sort_order: Literal["asc", "desc"] = Query(
+        default="desc",
+        description="Sort direction (asc or desc)",
+    ),
+) -> TaskListResponse:
+    return task_service.get_all(
+        db,
+        status=status,
+        priority=priority,
+        sort_by=sort_by,
+        sort_order=sort_order,
+    )
 
 
 @router.get("/{task_id}", response_model=TaskResponse)

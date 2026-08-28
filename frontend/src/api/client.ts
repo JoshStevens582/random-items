@@ -1,6 +1,7 @@
 import type {
   Task,
   TaskCreate,
+  TaskFilterParams,
   TaskListResponse,
   TaskUpdate,
 } from '../types'
@@ -70,8 +71,23 @@ async function request<T>(
   return (await response.json()) as T
 }
 
-export function listTasks(): Promise<TaskListResponse> {
-  return request<TaskListResponse>('/tasks')
+export function listTasks(filters?: TaskFilterParams): Promise<TaskListResponse> {
+  const params = new URLSearchParams()
+  if (filters?.status && filters.status !== 'all') {
+    params.set('status', filters.status)
+  }
+  if (filters?.priority && filters.priority !== 'all') {
+    params.set('priority', filters.priority)
+  }
+  if (filters?.sort_by) {
+    params.set('sort_by', filters.sort_by)
+  }
+  if (filters?.sort_order) {
+    params.set('sort_order', filters.sort_order)
+  }
+
+  const query = params.toString()
+  return request<TaskListResponse>(query ? `/tasks?${query}` : '/tasks')
 }
 
 export function createTask(payload: TaskCreate): Promise<Task> {

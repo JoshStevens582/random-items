@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ApiError,
   createTask,
@@ -7,9 +7,19 @@ import {
   updateTask,
 } from './api/client'
 import { AddTaskForm } from './components/AddTaskForm'
+import { DashboardStats } from './components/DashboardStats'
 import { Hero } from './components/Hero'
+import { TaskFilters } from './components/TaskFilters'
 import { TaskList } from './components/TaskList'
-import type { Task, TaskPriority, TaskStatus, TaskUpdate } from './types'
+import type {
+  Task,
+  TaskFilterParams,
+  TaskPriority,
+  TaskSortBy,
+  TaskSortOrder,
+  TaskStatus,
+  TaskUpdate,
+} from './types'
 import styles from './App.module.css'
 
 function messageFromError(error: unknown): string {
@@ -24,28 +34,71 @@ function messageFromError(error: unknown): string {
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([])
+  const [allTasks, setAllTasks] = useState<Task[]>([])
   const [listLoading, setListLoading] = useState(true)
   const [listError, setListError] = useState<string | null>(null)
   const [createBusy, setCreateBusy] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
   const [rowBusyId, setRowBusyId] = useState<number | null>(null)
 
+  // Filter state
+  const [statusFilter, setStatusFilter] = useState<TaskStatus | 'all'>('all')
+  const [priorityFilter, setPriorityFilter] = useState<TaskPriority | 'all'>('all')
+  const [sortBy, setSortBy] = useState<TaskSortBy>('created_at')
+  const [sortOrder, setSortOrder] = useState<TaskSortOrder>('desc')
+
+  const hasActiveFilters =
+    statusFilter !== 'all' ||
+    priorityFilter !== 'all' ||
+    sortBy !== 'created_at' ||
+    sortOrder !== 'desc'
+
   const refreshTasks = useCallback(async () => {
     setListLoading(true)
     setListError(null)
     try {
-      const response = await listTasks()
-      setTasks(response.tasks)
+      const filters: TaskFilterParams = {
+        status: statusFilter,
+        priority: priorityFilter,
+        sort_by: sortBy,
+        sort_order: sortOrder,
+      }
+      const [filteredRes, allRes] = await Promise.all([
+        listTasks(filters),
+        listTasks(),
+      ])
+      setTasks(filteredRes.tasks)
+      setAllTasks(allRes.tasks)
     } catch (error) {
       setListError(messageFromError(error))
     } finally {
       setListLoading(false)
     }
-  }, [])
+  }, [statusFilter, priorityFilter, sortBy, sortOrder])
 
   useEffect(() => {
     void refreshTasks()
   }, [refreshTasks])
+
+  // Stats derived from all tasks
+  const stats = useMemo(() => {
+    const total = allTasks.length
+    const todo = allTasks.filter((t) => t.status === 'todo').length
+    const inProgress = allTasks.filter((t) => t.status === 'in_progress').length
+    const done = allTasks.filter((t) => t.status === 'done').length
+    return { total, todo, inProgress, done }
+  }, [allTasks])
+
+  function handleResetFilters() {
+    setStatusFilter('all')
+    setPriorityFilter('all')
+    setSortBy('created_at')
+    setSortOrder('desc')
+  }
+
+  function handleToggleSortOrder() {
+    setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'))
+  }
 
   async function handleCreate(
     title: string,
@@ -55,12 +108,12 @@ export default function App() {
     setCreateBusy(true)
     setCreateError(null)
     try {
-      const created = await createTask({
+      await createTask({
         title,
         priority,
         due_date: dueDate,
       })
-      setTasks((current) => [...current, created])
+      await refreshTasks()
     } catch (error) {
       setCreateError(messageFromError(error))
       throw error
@@ -73,10 +126,8 @@ export default function App() {
     setRowBusyId(id)
     setListError(null)
     try {
-      const updated = await updateTask(id, payload)
-      setTasks((current) =>
-        current.map((task) => (task.id === id ? updated : task)),
-      )
+      await updateTask(id, payload)
+      await refreshTasks()
     } catch (error) {
       setListError(messageFromError(error))
       throw error
@@ -89,10 +140,8 @@ export default function App() {
     setRowBusyId(id)
     setListError(null)
     try {
-      const updated = await updateTask(id, { status })
-      setTasks((current) =>
-        current.map((task) => (task.id === id ? updated : task)),
-      )
+      await updateTask(id, { status })
+      await refreshTasks()
     } catch (error) {
       setListError(messageFromError(error))
     } finally {
@@ -104,10 +153,8 @@ export default function App() {
     setRowBusyId(id)
     setListError(null)
     try {
-      const updated = await updateTask(id, { priority })
-      setTasks((current) =>
-        current.map((task) => (task.id === id ? updated : task)),
-      )
+      await updateTask(id, { priority })
+      await refreshTasks()
     } catch (error) {
       setListError(messageFromError(error))
     } finally {
@@ -120,7 +167,7 @@ export default function App() {
     setListError(null)
     try {
       await deleteTask(id)
-      setTasks((current) => current.filter((task) => task.id !== id))
+      await refreshTasks()
     } catch (error) {
       setListError(messageFromError(error))
     } finally {
@@ -132,10 +179,28 @@ export default function App() {
     <div className={styles.app}>
       <Hero />
       <main className={styles.manage}>
+        <DashboardStats
+          total={stats.total}
+          todo={stats.todo}
+          inProgress={stats.inProgress}
+          done={stats.done}
+        />
         <AddTaskForm
           onSubmit={handleCreate}
           busy={createBusy}
           error={createError}
+        />
+        <TaskFilters
+          status={statusFilter}
+          priority={priorityFilter}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onStatusChange={setStatusFilter}
+          onPriorityChange={setPriorityFilter}
+          onSortByChange={setSortBy}
+          onSortOrderToggle={handleToggleSortOrder}
+          onReset={handleResetFilters}
+          hasActiveFilters={hasActiveFilters}
         />
         <TaskList
           tasks={tasks}
