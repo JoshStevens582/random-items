@@ -1,7 +1,7 @@
 [project]
 name = "random-items"
 version = "0.1.0"
-description = "FastAPI REST API for CRUD string items with randomized retrieval"
+description = "Personal task manager: FastAPI API and React UI"
 readme = "README.md"
 authors = [
     { name = "Joshua Stevens", email = "stevensjoshuaisbatman@gmail.com" }

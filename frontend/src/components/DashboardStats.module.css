@@ -1,8 +1,16 @@
+.section {
+  padding: 0 var(--space-md) var(--space-md);
+}
+
+.inner {
+  width: min(100%, var(--max-width));
+  margin: 0 auto;
+}
+
 .statsContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
   gap: var(--space-sm);
-  margin-bottom: var(--space-md);
 }
 
 .statCard {

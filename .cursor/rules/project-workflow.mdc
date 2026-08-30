@@ -1,23 +1,17 @@
 ---
-description: Project workflow, roadmap stages, and naming boundaries for the task-manager evolution
+description: Project is complete; keep existing naming and do not add new product stages
 alwaysApply: true
 ---
 
 # Project workflow
 
-This app is evolving from a random-items demo into a personal task manager in small, reviewable stages (see README Evolution).
+This app is a finished personal task manager (see README Evolution). Do not start new roadmap stages (notes, `updated_at`, auth, deploy) unless the user explicitly asks.
 
-## Delivery pattern
-
-- One stage per branch → PR → merge to `master` → delete the branch.
-- Next planned stages: 9 priority/due dates, 10 dashboard UI, 11 notes/`updated_at`.
-- Do not combine multiple roadmap stages in one PR unless the user explicitly asks.
-
-## Keep until a dedicated stage says otherwise
+## Keep as they are
 
 - Python package path: `src/random_items/` (imports stay `random_items.*`)
 - CLI entry: `uv run random-items`
-- Default SQLite file: `items.db` (table is already `tasks`)
+- Default SQLite file: `items.db` (table is `tasks`)
 - GitHub repo slug may stay `random-items`
 
 ## Schema and product

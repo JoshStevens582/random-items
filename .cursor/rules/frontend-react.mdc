@@ -11,12 +11,12 @@ alwaysApply: false
 - Types: `frontend/src/types.ts`
 - HTTP: `frontend/src/api/client.ts` only (no raw `fetch` in components)
 - UI: `components/` with colocated `*.module.css`
-- State for list/create/edit/shuffle lives in `App.tsx` unless a stage needs more
+- State for list/create/edit/filters lives in `App.tsx` unless a change needs more
 
 ## API contract
 
 - Base URL: `VITE_API_BASE_URL` or `http://127.0.0.1:8000`
-- Paths: `/tasks`, `/tasks/random`; fields: `title`, `status`, list key `tasks`
+- Paths: `/tasks`; fields: `title`, `status`, `priority`, `due_date`; list key `tasks`
 - Surface failures with `ApiError` / parent error props (same pattern as today)
 
 ```typescript
@@ -30,5 +30,5 @@ await fetch('http://127.0.0.1:8000/tasks', { ... })
 ## UI conventions
 
 - Functional components; CSS modules (not new CSS frameworks unless asked).
-- Preserve the current visual language when adding features; Stage 10 replaces shuffle with a dashboard — do not rip that out early.
+- Preserve the current dashboard visual language (stats, filters, **Your tasks**).
 - Keep Vite `server.host` as `127.0.0.1` so `http://127.0.0.1:5173` works on Windows.

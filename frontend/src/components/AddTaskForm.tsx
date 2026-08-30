@@ -4,9 +4,9 @@ import type { TaskPriority } from '../types'
 import styles from './AddTaskForm.module.css'
 
 const PRIORITY_OPTIONS: { value: TaskPriority; label: string }[] = [
-  { value: 'low', label: 'Low priority' },
-  { value: 'medium', label: 'Medium priority' },
-  { value: 'high', label: 'High priority' },
+  { value: 'low', label: 'Low' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'high', label: 'High' },
 ]
 
 interface AddTaskFormProps {
@@ -45,7 +45,7 @@ export function AddTaskForm({ onSubmit, busy, error }: AddTaskFormProps) {
       <div className={styles.inner}>
         <h2 className={styles.title}>Add a task</h2>
         <p className={styles.subtitle}>
-          Store a title in your collection with optional priority and due date.
+          Add a title with optional priority and due date.
         </p>
         <form className={styles.form} onSubmit={handleSubmit}>
           <input

@@ -1,6 +1,6 @@
-# Random Items
+# Task Manager
 
-Save short task titles, then shuffle them into a random order.
+A personal task manager: add, edit, and track tasks with status, priority, and due dates.
 
 **Backend:** Python 3.12 · FastAPI · SQLAlchemy · Alembic · SQLite  
 **Frontend:** React · TypeScript · Vite
@@ -9,17 +9,18 @@ Save short task titles, then shuffle them into a random order.
 
 ## What it does
 
-- Add, edit, delete, and set status on tasks (`todo`, `in_progress`, `done`)
-- Shuffle the collection into a random order
+- Add, edit, and delete tasks
+- Set status (`todo`, `in_progress`, `done`), priority (`low`, `medium`, `high`), and optional due dates
+- Dashboard counts plus filter and sort under **Your tasks**
 - REST API with docs at `/docs`
 
 The website (React) talks to the API (FastAPI). Locally those are two programs: the API on port 8000, the website on port 5173.
 
+This is a single-user demo. There is no login.
+
 ## Evolution
 
-This project is being built in stages — from a simple random-items demo toward a personal task manager. Each step is intentionally small and reviewable.
-
-### Foundation (on `master`)
+Built in small, reviewable stages from a random-items demo into this task manager. The product work below is complete.
 
 | Stage | What changed | Link |
 |-------|--------------|------|
@@ -34,13 +35,7 @@ This project is being built in stages — from a simple random-items demo toward
 | 9 | Priority and due dates | [PR #4](https://github.com/JoshStevens582/random-items/pull/4) |
 | 10 | Task dashboard UI (filters, badges, replace shuffle flow) | [PR #5](https://github.com/JoshStevens582/random-items/pull/5) |
 
-### Planned (task manager)
-
-| Stage | What changed |
-|-------|--------------|
-| 11 | Notes, `updated_at`, and polish |
-
-From stage 8 onward, each step will be its own branch → PR → merge.
+The Python package path (`src/random_items/`), CLI (`uv run random-items`), default SQLite file (`items.db`), and GitHub repo slug stay as they are.
 
 ## Run locally
 
@@ -98,7 +93,7 @@ The API can run on another machine without editing Python. Copy `.env.example` t
 | `CORS_ORIGINS` | `http://127.0.0.1:5173`, `http://localhost:5173` | Which website may call the API |
 | `HOST` / `PORT` | `127.0.0.1:8000` | Where the API listens |
 | `ENV` | `development` | Use `production` to turn reload off |
-| `APP_TITLE` | `Random Tasks API` | API title in `/docs` |
+| `APP_TITLE` | `Task Manager API` | API title in `/docs` |
 
 If the website should call an API that is not `http://127.0.0.1:8000`, copy `frontend/.env.example` to `frontend/.env` and set `VITE_API_BASE_URL`.
 
@@ -113,19 +108,19 @@ GitHub Actions runs backend tests and a frontend production build on every push 
 
 ## API
 
-| Method | Path            | Description                          |
-|--------|-----------------|--------------------------------------|
-| POST   | `/tasks`        | Create a new task                    |
-| GET    | `/tasks`        | List all tasks                       |
-| GET    | `/tasks/random` | All task titles in randomized order  |
-| GET    | `/tasks/{id}`   | Get a single task by ID              |
-| PUT    | `/tasks/{id}`   | Update a task                        |
-| DELETE | `/tasks/{id}`   | Delete a task                        |
-| GET    | `/health`       | Health check                         |
+| Method | Path            | Description |
+|--------|-----------------|-------------|
+| POST   | `/tasks`        | Create a new task |
+| GET    | `/tasks`        | List tasks (optional `status`, `priority`, `sort_by`, `sort_order`) |
+| GET    | `/tasks/{id}`   | Get a single task by ID |
+| PUT    | `/tasks/{id}`   | Update a task |
+| DELETE | `/tasks/{id}`   | Delete a task |
+| GET    | `/health`       | Health check |
 
 ```bash
-curl -X POST http://127.0.0.1:8000/tasks -H "Content-Type: application/json" -d "{\"title\": \"apple\"}"
-curl http://127.0.0.1:8000/tasks/random
+curl -X POST http://127.0.0.1:8000/tasks -H "Content-Type: application/json" -d "{\"title\": \"buy milk\"}"
+curl http://127.0.0.1:8000/tasks
+curl "http://127.0.0.1:8000/tasks?status=todo&sort_by=due_date&sort_order=asc"
 ```
 
 ## Project layout

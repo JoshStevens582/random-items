@@ -20,6 +20,7 @@ interface TaskListProps {
   loading: boolean
   error: string | null
   busyId: number | null
+  hasActiveFilters: boolean
   onUpdate: (id: number, payload: TaskUpdate) => Promise<void>
   onStatusChange: (id: number, status: TaskStatus) => Promise<void>
   onPriorityChange: (id: number, priority: TaskPriority) => Promise<void>
@@ -31,6 +32,7 @@ export function TaskList({
   loading,
   error,
   busyId,
+  hasActiveFilters,
   onUpdate,
   onStatusChange,
   onPriorityChange,
@@ -85,7 +87,11 @@ export function TaskList({
         {error ? <p className={styles.error}>{error}</p> : null}
 
         {!loading && !error && tasks.length === 0 ? (
-          <p className={styles.status}>No tasks yet. Add one above.</p>
+          <p className={styles.status}>
+            {hasActiveFilters
+              ? 'No tasks match these filters.'
+              : 'No tasks yet. Add one above.'}
+          </p>
         ) : null}
 
         <ul className={styles.list}>

@@ -207,6 +207,7 @@ export default function App() {
           loading={listLoading}
           error={listError}
           busyId={rowBusyId}
+          hasActiveFilters={hasActiveFilters}
           onUpdate={handleUpdate}
           onStatusChange={handleStatusChange}
           onPriorityChange={handlePriorityChange}
