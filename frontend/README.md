@@ -1,6 +1,6 @@
-# Random Tasks frontend
+# Task Manager frontend
 
-React + Vite + TypeScript UI for the Random Tasks API.
+React + Vite + TypeScript UI for the Task Manager API.
 
 ```bash
 npm install

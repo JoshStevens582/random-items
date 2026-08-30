@@ -1,3 +1,3 @@
-# Placeholder for README screenshot
+# Docs
 
-Capture the running UI and save it as `screenshot.png` in this folder.
+`screenshot.png` is the current UI, used at the top of the root README.

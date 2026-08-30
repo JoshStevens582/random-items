@@ -18,7 +18,7 @@ Keep responsibilities separate:
 | DB model | `db_models/` | Tables |
 | Schemas | `models/` | Pydantic request/response |
 
-Routers stay thin — call the service, do not embed SQL or shuffle logic.
+Routers stay thin — call the service, do not embed SQL or filter/sort logic.
 
 ```python
 # ✅ GOOD
@@ -32,7 +32,7 @@ def get_task(task_id: int, db: DbSession) -> TaskResponse:
 
 ## Domain
 
-- Entity: `Task` with `title` (string, 1–500), `status` (`todo` | `in_progress` | `done`, default `todo`), `created_at`.
+- Entity: `Task` with `title` (string, 1–500), `status` (`todo` | `in_progress` | `done`, default `todo`), `priority` (`low` | `medium` | `high`, default `medium`), optional `due_date`, `created_at`.
 - Mount under `/tasks`. List payloads use `tasks` (not `items`).
 - Settings via `config.settings` / env (see `.env.example`).
 

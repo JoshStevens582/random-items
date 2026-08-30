@@ -130,9 +130,10 @@
   padding: 0.4rem 0.55rem;
   background: #f7f9f6;
   color: var(--color-ink);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 0.85rem;
-  font-weight: 600;
+  line-height: 1.4;
+  font-weight: 500;
 }
 
 .danger {
@@ -155,10 +156,12 @@
 .editInput {
   flex: 2 1 12rem;
   min-width: 0;
-  padding: 0.6rem 0.75rem;
+  padding: 0.45rem 0.65rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: #f7f9f6;
+  font-size: 0.875rem;
+  line-height: 1.4;
 }
 
 @keyframes rowIn {
